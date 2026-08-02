@@ -23,8 +23,7 @@ Every day a fresh NASA astronomy picture becomes your background. Search the web
 
 ## 📸 Preview
 
-![Space Pulse Screenshot](screenshot.png)
-
+![Space Pulse Screenshot](https://raw.githubusercontent.com/Karthik-854321/newtab/main/screenshot.png)
 ---
 
 ## 🛠️ Tech Stack
@@ -140,4 +139,3 @@ NASA images are public domain, but please credit NASA where appropriate.
 ---
 
 **Made with ❤️ and a little stardust.**
-```
