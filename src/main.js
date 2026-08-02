@@ -14,6 +14,17 @@ const USER_PROFILE_KEY = "cosmotab-user-profile";
 const LINKS_STORAGE_KEY = "cosmotab-links";
 const TODO_STORAGE_KEY = "cosmotab-todos";
 
+// Default background image for video APODs (NASA image)
+const DEFAULT_BG_IMAGE =
+  "https://apod.nasa.gov/apod/image/1905/M94_Hubble_960.jpg";
+
+function setBackground(imageUrl) {
+  document.body.style.background = `
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url(${imageUrl}) center/cover no-repeat
+  `;
+}
+
 function formatDate(date) {
   return date.toISOString().split("T")[0];
 }
@@ -48,9 +59,15 @@ function updateGreetingAndFocus() {
 
   const profile = loadUserProfile();
   const name = profile?.name || "traveler";
+  const emoji = profile?.emoji || "";
 
   const greetingEl = document.getElementById("greeting");
-  if (greetingEl) greetingEl.textContent = `${baseGreeting}, ${name}`;
+  if (greetingEl) {
+    greetingEl.textContent = `${baseGreeting}, ${name}`;
+    if (emoji) {
+      greetingEl.textContent = `${emoji} ${greetingEl.textContent}`;
+    }
+  }
 
   const focusEl = document.getElementById("focus");
   if (focusEl) focusEl.textContent = "Search the web, save links, and manage notes.";
@@ -84,11 +101,12 @@ function setupClockGreeting() {
   setInterval(updateGreetingAndFocus, 60000);
 }
 
-function applyAvatar(profile) {
-  const avatarEl = document.getElementById("avatar");
-  if (!avatarEl || !profile) return;
-  avatarEl.className = "avatar";
-  avatarEl.classList.add(profile.avatar);
+// Apply the selected emoji to the dedicated element
+function applyAvatarEmoji(profile) {
+  const emojiEl = document.getElementById("avatar-emoji");
+  if (!emojiEl || !profile) return;
+  emojiEl.textContent = profile.emoji || "";
+  emojiEl.style.display = profile.emoji ? "block" : "none";
 }
 
 function maybeShowUserSetup() {
@@ -107,17 +125,17 @@ function maybeShowUserSetup() {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const name = nameInput.value.trim();
-      const avatar = avatarSelect.value;
-      if (!name || !avatar) return;
+      const emoji = avatarSelect.value;
+      if (!name || !emoji) return;
 
-      const newProfile = { name, avatar };
+      const newProfile = { name, emoji };
       saveUserProfile(newProfile);
       modal.classList.add("hidden");
       updateGreetingAndFocus();
-      applyAvatar(newProfile);
+      applyAvatarEmoji(newProfile);
     });
   } else {
-    applyAvatar(profile);
+    applyAvatarEmoji(profile);
   }
 }
 
@@ -143,6 +161,7 @@ async function fetchApod(dateString) {
     if (dateEl) dateEl.textContent = "";
     if (explanationEl) explanationEl.textContent = "Please check your network or try again later.";
     if (mediaContainer) mediaContainer.innerHTML = "";
+    setBackground(DEFAULT_BG_IMAGE);
   } finally {
     setLoading(false);
   }
@@ -155,6 +174,13 @@ function renderApod(data) {
   if (dateEl) dateEl.textContent = date;
   if (explanationEl) explanationEl.textContent = explanation || "";
   if (mediaContainer) mediaContainer.innerHTML = "";
+
+  // Update background with APOD image (or fallback for video)
+  if (media_type === "image") {
+    setBackground(url);
+  } else {
+    setBackground(DEFAULT_BG_IMAGE);
+  }
 
   if (!mediaContainer) return;
 
@@ -475,3 +501,24 @@ document.addEventListener("DOMContentLoaded", () => {
   setupControls();
   fetchApod();
 });
+// Tilt effect for glass panels
+function applyTilt(element) {
+  element.addEventListener('mousemove', (e) => {
+    const rect = element.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -5; // max 5deg
+    const rotateY = ((x - centerX) / centerX) * 5;
+    element.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+    element.style.transition = 'transform 0.1s ease-out';
+  });
+  element.addEventListener('mouseleave', () => {
+    element.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0px)';
+    element.style.transition = 'transform 0.5s ease';
+  });
+}
+
+// Attach to your cards
+document.querySelectorAll('.media-container, .notes-section .todo').forEach(card => applyTilt(card));
