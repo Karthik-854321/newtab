@@ -23,7 +23,7 @@ Every day a fresh NASA astronomy picture becomes your background. Search the web
 
 ## 📸 Preview
 
-![Space Pulse Screenshot](screenshot.png)
+![Space Pulse Screenshot](https://github.com/Karthik-854321/newtab/blob/main/screenshot.png)
 
 ---
 
