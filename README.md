@@ -121,7 +121,15 @@ All glass properties are in `style.css`. Search for `backdrop-filter`, `rgba(255
 Contributions are welcome! Feel free to open an issue or pull request.  
 Ideas: new themes, additional search engines, weather widget, or a Pomodoro timer.
 
----
+## 🤖 AI Usage
+
+Parts of this project were built with the help of AI assistance (OpenAI,deepseek).  
+The AI was used for:
+- Drafting and refining HTML/CSS/JS code
+- Generating the initial README and documentation
+- Debugging and layout suggestions
+- Ai is used as a tool to repair my page 
+All code was written,reviewed, tested, and modified by me before final submission.-
 
 ## 📄 License
 
