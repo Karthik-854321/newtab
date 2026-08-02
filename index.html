@@ -2,24 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>NASA APOD - Space Pulse</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NASA APOD - Space Pulse</title>
   </head>
   <body>
     <div id="app">
       <div class="pulse-bar"></div>
 
+      <form id="search-form" class="search-form">
+        <input
+          id="search-input"
+          class="search-input"
+          type="text"
+          placeholder="Search the web..."
+          autocomplete="off"
+        />
+        <button type="submit" class="search-button">Search</button>
+      </form>
+
+      <div class="links-section">
+        <div class="links-header">
+          <h2>Quick Access</h2>
+          <button id="add-link-button" class="icon-button" title="Add link">+</button>
+        </div>
+        <div id="links" class="links"></div>
+      </div>
+
       <header class="site-header">
         <h1>NASA Astronomy Picture of the Day</h1>
         <p>Automatically updated daily using NASA's APOD API.</p>
       </header>
-   
+
       <main class="apod-layout">
         <section class="apod-media">
-          <div id="apod-media-container" class="media-container">
-    
-          </div>
-        </section>       
+          <div id="apod-media-container" class="media-container"></div>
+        </section>
 
         <section class="apod-info">
           <h2 id="apod-title">Loading...</h2>
@@ -31,10 +48,32 @@
               Pick a date:
               <input type="date" id="apod-date-input" />
             </label>
-            <button id="apod-refresh-btn">Fetch APOD</button>
+            <button id="apod-refresh-btn" type="button">Fetch APOD</button>
           </div>
         </section>
       </main>
+
+      <div id="link-modal" class="modal hidden">
+        <div class="modal-content">
+          <h3 id="link-modal-title">Add Quick Link</h3>
+          <form id="link-form">
+            <label>
+              Name
+              <input id="link-name" type="text" autocomplete="off" />
+            </label>
+            <label>
+              URL
+              <input id="link-url" type="url" autocomplete="off" />
+            </label>
+            <div class="modal-actions">
+              <button type="button" id="link-cancel">Cancel</button>
+              <button type="submit" id="link-save">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
+</html>

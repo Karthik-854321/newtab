@@ -10,8 +10,12 @@ const dateInput = document.getElementById("apod-date-input");
 const refreshBtn = document.getElementById("apod-refresh-btn");
 const appRoot = document.getElementById("app");
 
+const USER_PROFILE_KEY = "cosmotab-user-profile";
+const LINKS_STORAGE_KEY = "cosmotab-links";
+const TODO_STORAGE_KEY = "cosmotab-todos";
+
 function formatDate(date) {
-  return date.toISOString().split("T")[0]; // YYYY-MM-DD
+  return date.toISOString().split("T")[0];
 }
 
 function setLoading(isLoading) {
@@ -19,32 +23,126 @@ function setLoading(isLoading) {
   appRoot.dataset.loading = isLoading ? "true" : "false";
 }
 
+function loadUserProfile() {
+  const raw = localStorage.getItem(USER_PROFILE_KEY);
+  try {
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveUserProfile(profile) {
+  localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
+}
+
+function updateGreetingAndFocus() {
+  const now = new Date();
+  const hour = now.getHours();
+  let baseGreeting;
+
+  if (hour < 5) baseGreeting = "Good night";
+  else if (hour < 12) baseGreeting = "Good morning";
+  else if (hour < 18) baseGreeting = "Good afternoon";
+  else baseGreeting = "Good evening";
+
+  const profile = loadUserProfile();
+  const name = profile?.name || "traveler";
+
+  const greetingEl = document.getElementById("greeting");
+  if (greetingEl) greetingEl.textContent = `${baseGreeting}, ${name}`;
+
+  const focusEl = document.getElementById("focus");
+  if (focusEl) focusEl.textContent = "Search the web, save links, and manage notes.";
+}
+
+function setupClockGreeting() {
+  const clockEl = document.getElementById("clock");
+  const dateDisplayEl = document.getElementById("date");
+
+  function updateClockAndDate() {
+    const now = new Date();
+
+    if (clockEl) {
+      clockEl.textContent = now.toLocaleTimeString();
+    }
+
+    if (dateDisplayEl) {
+      dateDisplayEl.textContent = now.toLocaleDateString(undefined, {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+    }
+  }
+
+  updateClockAndDate();
+  updateGreetingAndFocus();
+
+  setInterval(updateClockAndDate, 1000);
+  setInterval(updateGreetingAndFocus, 60000);
+}
+
+function applyAvatar(profile) {
+  const avatarEl = document.getElementById("avatar");
+  if (!avatarEl || !profile) return;
+  avatarEl.className = "avatar";
+  avatarEl.classList.add(profile.avatar);
+}
+
+function maybeShowUserSetup() {
+  const profile = loadUserProfile();
+  const modal = document.getElementById("user-setup-modal");
+  const form = document.getElementById("user-setup-form");
+  const nameInput = document.getElementById("user-name-input");
+  const avatarSelect = document.getElementById("user-avatar-select");
+
+  if (!modal || !form || !nameInput || !avatarSelect) return;
+
+  if (!profile) {
+    modal.classList.remove("hidden");
+    nameInput.focus();
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const avatar = avatarSelect.value;
+      if (!name || !avatar) return;
+
+      const newProfile = { name, avatar };
+      saveUserProfile(newProfile);
+      modal.classList.add("hidden");
+      updateGreetingAndFocus();
+      applyAvatar(newProfile);
+    });
+  } else {
+    applyAvatar(profile);
+  }
+}
+
 async function fetchApod(dateString) {
   try {
     setLoading(true);
-    titleEl.textContent = "Loading NASA APOD...";
-    explanationEl.textContent = "";
-    mediaContainer.innerHTML = "";
+    if (titleEl) titleEl.textContent = "Loading NASA APOD...";
+    if (explanationEl) explanationEl.textContent = "";
+    if (mediaContainer) mediaContainer.innerHTML = "";
 
     const url = new URL("https://api.nasa.gov/planetary/apod");
     url.searchParams.set("api_key", API_KEY);
-    if (dateString) {
-      url.searchParams.set("date", dateString);
-    }
+    if (dateString) url.searchParams.set("date", dateString);
 
     const res = await fetch(url.toString());
-    if (!res.ok) {
-      throw new Error(`NASA API error: ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`NASA API error: ${res.status}`);
 
     const data = await res.json();
     renderApod(data);
   } catch (err) {
     console.error(err);
-    titleEl.textContent = "Error loading APOD";
-    dateEl.textContent = "";
-    explanationEl.textContent = "Please check your network or try again later.";
-    mediaContainer.innerHTML = "";
+    if (titleEl) titleEl.textContent = "Error loading APOD";
+    if (dateEl) dateEl.textContent = "";
+    if (explanationEl) explanationEl.textContent = "Please check your network or try again later.";
+    if (mediaContainer) mediaContainer.innerHTML = "";
   } finally {
     setLoading(false);
   }
@@ -53,11 +151,12 @@ async function fetchApod(dateString) {
 function renderApod(data) {
   const { title, date, explanation, media_type, url } = data;
 
-  titleEl.textContent = title;
-  dateEl.textContent = date;
-  explanationEl.textContent = explanation || "";
+  if (titleEl) titleEl.textContent = title;
+  if (dateEl) dateEl.textContent = date;
+  if (explanationEl) explanationEl.textContent = explanation || "";
+  if (mediaContainer) mediaContainer.innerHTML = "";
 
-  mediaContainer.innerHTML = "";
+  if (!mediaContainer) return;
 
   if (media_type === "image") {
     const img = document.createElement("img");
@@ -84,7 +183,6 @@ function setupControls() {
   if (dateInput) {
     dateInput.max = todayStr;
     dateInput.value = todayStr;
-
     dateInput.addEventListener("change", () => {
       fetchApod(dateInput.value || todayStr);
     });
@@ -98,5 +196,282 @@ function setupControls() {
   }
 }
 
-setupControls();
-fetchApod(); // fetch today's APOD on load
+function setupSearch() {
+  const form = document.getElementById("search-form");
+  const input = document.getElementById("search-input");
+  if (!form || !input) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const query = input.value.trim();
+    if (!query) return;
+
+    window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+  });
+}
+
+function loadLinks() {
+  const raw = localStorage.getItem(LINKS_STORAGE_KEY);
+  try {
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveLinks(links) {
+  localStorage.setItem(LINKS_STORAGE_KEY, JSON.stringify(links));
+}
+
+function renderLinks(links) {
+  const container = document.getElementById("links");
+  if (!container) return;
+  container.innerHTML = "";
+
+  links.forEach((link, index) => {
+    const chip = document.createElement("a");
+    chip.href = link.url;
+    chip.target = "_blank";
+    chip.className = "link-chip";
+
+    const nameSpan = document.createElement("span");
+    nameSpan.textContent = link.name;
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.textContent = "✎";
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.textContent = "✕";
+
+    editBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openLinkModal("edit", links, index);
+    });
+
+    deleteBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      links.splice(index, 1);
+      saveLinks(links);
+      renderLinks(links);
+    });
+
+    chip.appendChild(nameSpan);
+    chip.appendChild(editBtn);
+    chip.appendChild(deleteBtn);
+    container.appendChild(chip);
+  });
+}
+
+let currentLinkMode = "add";
+let currentLinkIndex = null;
+
+function openLinkModal(mode, links, index = null) {
+  currentLinkMode = mode;
+  currentLinkIndex = index;
+
+  const modal = document.getElementById("link-modal");
+  const titleEl = document.getElementById("link-modal-title");
+  const nameInput = document.getElementById("link-name");
+  const urlInput = document.getElementById("link-url");
+
+  if (!modal || !titleEl || !nameInput || !urlInput) return;
+
+  if (mode === "edit" && index != null) {
+    titleEl.textContent = "Edit Quick Link";
+    nameInput.value = links[index].name;
+    urlInput.value = links[index].url;
+  } else {
+    titleEl.textContent = "Add Quick Link";
+    nameInput.value = "";
+    urlInput.value = "";
+  }
+
+  modal.classList.remove("hidden");
+  nameInput.focus();
+}
+
+function closeLinkModal() {
+  const modal = document.getElementById("link-modal");
+  if (modal) modal.classList.add("hidden");
+}
+
+function setupLinks() {
+  let links = loadLinks();
+  if (links.length === 0) {
+    links = [
+      { name: "Stardance", url: "https://stardance.hackclub.com" },
+      { name: "GitHub", url: "https://github.com" },
+      { name: "Hackatime", url: "https://hackatime.hackclub.com" },
+    ];
+    saveLinks(links);
+  }
+
+  renderLinks(links);
+
+  const addBtn = document.getElementById("add-link-button");
+  const modal = document.getElementById("link-modal");
+  const form = document.getElementById("link-form");
+  const cancelBtn = document.getElementById("link-cancel");
+  const nameInput = document.getElementById("link-name");
+  const urlInput = document.getElementById("link-url");
+
+  if (!addBtn || !modal || !form || !cancelBtn || !nameInput || !urlInput) return;
+
+  addBtn.addEventListener("click", () => {
+    openLinkModal("add", links);
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    closeLinkModal();
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeLinkModal();
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = nameInput.value.trim();
+    const url = urlInput.value.trim();
+    if (!name || !url) return;
+
+    if (currentLinkMode === "edit" && currentLinkIndex != null) {
+      links[currentLinkIndex] = { name, url };
+    } else {
+      links.push({ name, url });
+    }
+
+    saveLinks(links);
+    renderLinks(links);
+    closeLinkModal();
+  });
+}
+
+function loadTodos() {
+  const raw = localStorage.getItem(TODO_STORAGE_KEY);
+  try {
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveTodos(todos) {
+  localStorage.setItem(TODO_STORAGE_KEY, JSON.stringify(todos));
+}
+
+function renderTodos(todos) {
+  const grid = document.getElementById("todo-grid");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  todos.forEach((todo, index) => {
+    const card = document.createElement("div");
+    card.className = "sticky-note";
+    if (todo.done) card.classList.add("done");
+
+    const textEl = document.createElement("div");
+    textEl.className = "sticky-note-text";
+    textEl.textContent = todo.text;
+
+    const footer = document.createElement("div");
+    footer.className = "sticky-note-footer";
+
+    const timeEl = document.createElement("span");
+    timeEl.textContent = todo.createdAt || "";
+
+    const btns = document.createElement("div");
+    btns.className = "sticky-note-buttons";
+
+    const doneBtn = document.createElement("button");
+    doneBtn.type = "button";
+    doneBtn.textContent = todo.done ? "✔" : "✓";
+    doneBtn.title = todo.done ? "Mark as not done" : "Mark as done";
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.textContent = "✎";
+    editBtn.title = "Edit note";
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.textContent = "🗑";
+    deleteBtn.title = "Delete note";
+
+    doneBtn.addEventListener("click", () => {
+      todos[index].done = !todos[index].done;
+      saveTodos(todos);
+      renderTodos(todos);
+    });
+
+    editBtn.addEventListener("click", () => {
+      const newText = prompt("Edit note:", todo.text);
+      if (newText != null) {
+        todos[index].text = newText.trim();
+        saveTodos(todos);
+        renderTodos(todos);
+      }
+    });
+
+    deleteBtn.addEventListener("click", () => {
+      if (confirm("Delete this note?")) {
+        todos.splice(index, 1);
+        saveTodos(todos);
+        renderTodos(todos);
+      }
+    });
+
+    btns.appendChild(doneBtn);
+    btns.appendChild(editBtn);
+    btns.appendChild(deleteBtn);
+
+    footer.appendChild(timeEl);
+    footer.appendChild(btns);
+
+    card.appendChild(textEl);
+    card.appendChild(footer);
+    grid.appendChild(card);
+  });
+}
+
+function setupTodo() {
+  let todos = loadTodos();
+  renderTodos(todos);
+
+  const form = document.getElementById("todo-form");
+  const input = document.getElementById("todo-input");
+  if (!form || !input) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    const now = new Date();
+    const stamp = now.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    });
+
+    todos.push({
+      text,
+      done: false,
+      createdAt: stamp,
+    });
+    saveTodos(todos);
+    renderTodos(todos);
+    input.value = "";
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  maybeShowUserSetup();
+  setupClockGreeting();
+  setupSearch();
+  setupLinks();
+  setupTodo();
+  setupControls();
+  fetchApod();
+});
