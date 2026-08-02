@@ -23,7 +23,7 @@ Every day a fresh NASA astronomy picture becomes your background. Search the web
 
 ## 📸 Preview
 
-![alt text](image.png)
+![Space Pulse Screenshot](screenshot.png)
 
 ---
 
@@ -141,5 +141,3 @@ NASA images are public domain, but please credit NASA where appropriate.
 
 **Made with ❤️ and a little stardust.**
 ```
-
----
