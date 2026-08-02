@@ -145,7 +145,7 @@ body {
 }
 
 .search-input:focus {
-  border-color: #6366f1;
+  border-color: #8889dd;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
@@ -206,8 +206,8 @@ body {
 /* ===== Quick links ===== */
 
 .links-section {
-  margin-top: 0;
-  width: 100%;
+  margin-top: 25px;
+  width: 85%;
 }
 
 .links-header {
@@ -223,11 +223,11 @@ body {
 }
 
 .icon-button {
-  width: 2rem;
+  width: 2.5rem;
   height: 2rem;
   border-radius: 999px;
   border: none;
-  background: #111827;
+  background: #3d40e7;;
   color: #e5e7eb;
   font-size: 1.4rem;
   cursor: pointer;
