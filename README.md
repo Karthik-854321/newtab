@@ -22,6 +22,8 @@ Every day a fresh NASA astronomy picture becomes your background. Search the web
 ---
 
 ## 📸 Preview
+<img width="1351" height="680" alt="image" src="https://github.com/user-attachments/assets/a7da8fab-2f14-45e8-9b8d-d8c7f18a7d55" />
+
 <img src="https://raw.githubusercontent.com/Karthik-854321/newtab/main/screenshot.png" alt="Space Pulse Screenshot" width="100%">
 ---
 
