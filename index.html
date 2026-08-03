@@ -82,6 +82,7 @@
                   placeholder="Write a sticky note..."
                   autocomplete="off"
                 />
+                <input id="todo-color" type="color" value="#f7d96a" />
               </form>
               <div id="todo-grid" class="todo-grid"></div>
             </div>
@@ -104,25 +105,19 @@
         </div>
 
         <div id="user-setup-modal" class="modal hidden">
-          <div class="modal-content">
-            <h3>Welcome! Set up your profile</h3>
-            <form id="user-setup-form">
-              <label>Your name <input id="user-name-input" type="text" autocomplete="off" placeholder="e.g., Cosmonaut" /></label>
-              <label>
-                Choose avatar emoji
-                <select id="user-avatar-select">
-                  <option value="👨‍🚀">👨‍🚀 Astronaut</option>
-                  <option value="👽">👽 Alien</option>
-                  <option value="🤖">🤖 Robot</option>
-                  <option value="🐱">🐱 Space Cat</option>
-                </select>
-              </label>
-              <div class="modal-actions">
-                <button type="submit" id="user-setup-save">Save</button>
-              </div>
-            </form>
-          </div>
-        </div>
+  <div class="modal-content">
+    <h3>Pick your emoji</h3>
+    <div class="emoji-picker">
+      <button type="button" class="emoji-btn" data-emoji="👨‍🚀">👨‍🚀</button>
+      <button type="button" class="emoji-btn" data-emoji="👽">👽</button>
+      <button type="button" class="emoji-btn" data-emoji="🤖">🤖</button>
+      <button type="button" class="emoji-btn" data-emoji="🐱">🐱</button>
+      <button type="button" class="emoji-btn" data-emoji="🪐">🪐</button>
+      <button type="button" class="emoji-btn" data-emoji="🌙">🌙</button>
+    </div>
+  </div>
+</div>
+</div>
       </main>
     </div>
 
