@@ -7,6 +7,8 @@ Space Pulse replaces the standard new tab with a space-themed dashboard based on
 This project was created out of desire for a nice-looking yet functional start page. In other words, I decided to replace my blank new tab with something that would inspire interest in space while staying useful.
 
 ---
+## Preveiw
+![alt text](image.png)
 
 ## ✨ Features
 
