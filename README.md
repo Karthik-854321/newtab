@@ -1,149 +1,212 @@
-## 🌌 Complete README.md
+# 🚀 Space Pulse
 
-```markdown
-# 🚀 Space Pulse – NASA APOD New Tab
+*A simple browser new tab page that turns opening a new tab into a useful experience rather than a blank one.*
 
-**A beautiful, glassmorphic new tab page that brings the cosmos to your browser.**
-Every day a fresh NASA astronomy picture becomes your background. Search the web, save quick links, jot down sticky notes, and enjoy a personalized space dashboard.
+Space Pulse replaces the standard new tab with a space-themed dashboard based on NASA's Astronomy Picture of the Day (APOD) API. Every day you get a new astronomy picture while also being able to access all the tools you need most—search, links, notes, and your personalized greeting.
+
+This project was created out of desire for a nice-looking yet functional start page. In other words, I decided to replace my blank new tab with something that would inspire interest in space while staying useful.
 
 ---
 
 ## ✨ Features
 
-- 🌠 **Dynamic NASA APOD Background** – The Astronomy Picture of the Day fills the page; videos fall back to a stunning default galaxy.
-- 🕰️ **Live Greeting & Clock** – Time‑based greetings (Good morning/afternoon/evening) with your name and a real‑time clock.
-- 🔍 **Universal Search Bar** – Search Google (or any engine) directly from the page.
-- 📌 **Quick Links** – Add, edit, delete shortcut links to your favorite sites.
-- 📝 **Sticky Notes** – Always visible on the right side – never scroll away. Mark as done, edit, or delete.
-- 👤 **User Setup** – Choose your name and an emoji avatar (astronaut, alien, robot, space cat).
-- 🧊 **Glassmorphism UI** – Frosted glass panels with backdrop blur, floating animations, and a responsive layout.
-- 💾 **Local Storage** – Your links, notes, and profile are saved in your browser and persist across sessions.
+### 🌌 Daily NASA APOD Background
+
+Space Pulse fetches NASA's Astronomy Picture of the Day each day via the APOD API.
+
+* Automatically displays the latest astronomy image.
+* Both images and videos are supported.
+* If NASA decides to post a video rather than an image, the app uses a fallback space background.
+
+### 👋 Personalized Welcome
+
+During your first visit, you will be prompted to type your name and select your own emoji avatar.
+
+Your profile is stored in your local browser and consists of:
+
+* Your name.
+* Emoji avatar.
+* Personalized greeting according to the time of the day.
+
+### 🕒 Live Clock & Date
+
+Time and date are shown on the dashboard and updated automatically without a need for reloading the page.
+
+### 🔍 Search
+
+Use the search bar in order to search the web through Google without leaving your new tab page.
+
+### 🔗 Quick Links
+
+Store shortcuts to your favorite websites.
+
+Here is what you can do with them:
+
+* Add new links.
+* Edit the existing ones.
+* Delete links anytime you want.
+
+Everything is stored locally in your browser.
+
+### 📝 Sticky Notes
+
+Store small reminders right on your new tab page.
+
+With your notes you can:
+
+* Create notes.
+* Edit notes.
+* Mark the notes as completed.
+* Delete notes.
+
+The notes are available even after closing the browser.
+
+### 💾 Local Storage
+
+An account and a database aren't required.
+
+The following data is stored locally in your browser:
+
+* Profile data.
+* Emoji avatar.
+* Quick links.
+* Sticky notes.
+
+Nothing is uploaded to the servers.
 
 ---
 
-## 📸 Preview
+## 🛠️ Built With
 
-![Space Pulse Screenshot](https://raw.githubusercontent.com/Karthik-854321/newtab/main/screenshot.png)
+* HTML5.
+* CSS3.
+* JavaScript (ES6).
+* Vite.
+* NASA Astronomy Picture of the Day (APOD) API.
+* Browser Local Storage.
+
 ---
 
-## 🛠️ Tech Stack
+## 📂 Project Structure
 
-- **HTML5** – Semantic structure  
-- **CSS3** – Glassmorphism, animations, responsive grid  
-- **Vanilla JavaScript (ES6 Modules)** – NASA API fetch, DOM manipulation, LocalStorage  
-- **NASA APOD API** – Free, requires an API key
+```
+src/
+│── main.js
+│── style.css
+│
+index.html
+vite.config.js
+package.json
+.env
+```
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Get a NASA API Key
-Go to [https://api.nasa.gov](https://api.nasa.gov) and generate a free key.
+### 1. Clone the repository
 
-### 2. Clone or Download the Project
 ```bash
 git clone https://github.com/your-username/space-pulse.git
+
 cd space-pulse
 ```
 
-### 3. Set Up Environment Variable
-Create a `.env` file in the root:
-```
-VITE_NASA_API_KEY=YOUR_NASA_API_KEY_HERE
-```
+### 2. Install dependencies
 
-### 4. Run the Project
-This project uses **Vite** as the module bundler.  
-Install dependencies and start the dev server:
 ```bash
 npm install
+```
+
+### 3. Get a NASA API Key
+
+Obtain a free API key from:
+
+https://api.nasa.gov
+
+### 4. Create a `.env` file
+
+```env
+VITE_NASA_API_KEY=your_api_key_here
+```
+
+### 5. Start the development server
+
+```bash
 npm run dev
 ```
-Then open the URL shown in the terminal (usually `http://localhost:5173`).
 
-> **Alternative**: You can use any static server if you don’t use Vite. Just make sure the `import` statements in `main.js` are served with the correct MIME type.
+### 6. Build for production
+
+```bash
+npm run build
+```
 
 ---
 
-## 🔧 Customization
+## 📦 How It Works
 
-### Change the Search Engine
-To switch from Google to **DuckDuckGo**, **Yahoo**, or another engine, modify the following line in `main.js` (inside the `setupSearch` function):
-
-**Current (Google):**
-```js
-window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-```
-
-**For DuckDuckGo:**
-```js
-window.location.href = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
-```
-
-**For Yahoo:**
-```js
-window.location.href = `https://search.yahoo.com/search?p=${encodeURIComponent(query)}`;
-```
-
-**For Bing:**
-```js
-window.location.href = `https://www.bing.com/search?q=${encodeURIComponent(query)}`;
-```
-
-After making the change, save the file and refresh the page.
-
-### Change the Default Background for Video APODs
-In `main.js`, locate `DEFAULT_BG_IMAGE` and replace the URL with any NASA image you prefer.
-
-### Adjust the Glass Effect
-All glass properties are in `style.css`. Search for `backdrop-filter`, `rgba(255,255,255,...)` and adjust opacity/blur to your taste.
+1. The app makes a request to get the latest APOD data from NASA.
+2. The image (or fallback background) is being displayed.
+3. Profile data, notes, and shortcuts are being loaded from Local Storage.
+4. The clock updates in real-time.
+5. Anything that has been changed is automatically being stored in your browser.
 
 ---
 
-## 📖 The Story (Devlog)
+## 💡 What I Learned
 
-📅 **Devlog: From Raw API to Floating Glass Dashboard**
+Building this app allowed me to learn how to:
 
-1. 🚀 **Started** with a simple NASA APOD viewer – fetching daily space images & videos.
-2. 🔍 **Added** a Chrome‑style search bar, quick links, and sticky notes for full productivity.
-3. 🎨 **Dynamized** the background to mirror the APOD image, with a fallback for video days.
-4. 🧩 **Restructured** the layout – greeting, clock, and avatar at the top, notes beside APOD, no awkward scrolls.
-5. ✨ **Polished** with glassmorphism: frosted panels, saturate blurs, and subtle borders for depth.
-6. 🕊️ **Brought it to life** with floating animations and a friendly 3D tilt on hover.
-7. 👨‍🚀 **Personalized** with a setup modal that remembers your name and emoji avatar – every visit feels like your own space station.
-
-*The result: a sleek, immersive New Tab page that turns NASA’s cosmos into a functional, floating workspace.*
+* Work with REST API.
+* Fetch and display external data.
+* Handle API responses and errors.
+* Use Local Storage to store user data.
+* Create a responsive interface.
+* Organize JavaScript project with Vite.
+* Improve user experience with simple animations.
 
 ---
 
-## 🤝 Contributing
+## 🔮 Future Improvements
 
-Contributions are welcome! Feel free to open an issue or pull request.  
-Ideas: new themes, additional search engines, weather widget, or a Pomodoro timer.
+Some features I would like to add in the future are:
+
+* ⏳ Pomodoro timer.
+* 🌤️ Weather widget.
+* 🌙 Dark and Light themes.
+* 🎨 Multiple sticky note colors.
+* ⭐ Drag-and-drop quick links.
+* 📅 Calendar widget.
+* 📊 Daily productivity tracker.
+* 🔎 Multiple search engines.
+
+---
 
 ## 🤖 AI Usage
 
-Parts of this project were built with the help of AI assistance (OpenAI,deepseek).  
-The AI was used for:
-- Drafting and refining HTML/CSS/JS code
-- Generating the initial README and documentation
-- Debugging and layout suggestions
-- Ai is used as a tool to repair my page 
-All code was written,reviewed, tested, and modified by me before final submission.-
+During the development process, AI was used as an assistant for:
+
+* Brainstorming feature ideas.
+* Improving UI/UX design decisions.
+* Debugging JavaScript issues.
+* Refactoring and organizing code.
+* Writing and improving documentation.
+
+All project architecture, implementation, testing, customization, and final decisions have been completed and reviewed by me.
+
+---
+
+## 🙏 Credits
+
+* NASA for providing the Astronomy Picture of the Day (APOD) API.
+* Hack Club Stardance for inspiring and encouraging the project.
+* Everyone who has tested the project and shared their feedback.
+
+---
 
 ## 📄 License
 
-MIT – use it, modify it, share it.  
-NASA images are public domain, but please credit NASA where appropriate.
+This project is licensed under the MIT License.
 
----
-
-## 🙏 Acknowledgements
-
-- NASA for the amazing APOD API
-- The glassmorphism trend for UI inspiration
-- Vite for the blazing‑fast development experience
-
----
-
-**Made with ❤️ and a little stardust.**
+Feel free to use, modify, and learn from it.
