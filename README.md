@@ -8,7 +8,7 @@ This project was created out of desire for a nice-looking yet functional start p
 
 ---
 ## Preveiw
-![alt text](image.png)
+![preview image of space pulse](image.png)
 
 ## ✨ Features
 
