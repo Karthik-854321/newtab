@@ -1,214 +1,154 @@
-# 🚀 Space Pulse
+# Space Pulse
 
-*A simple browser new tab page that turns opening a new tab into a useful experience rather than a blank one.*
+Space Pulse is a custom new tab page built with the NASA Astronomy Picture of the Day API. Space Pulse gives a new tab more functionality while being more fun and engaging than a normal new tab. It has a search bar, quick links, sticky notes, and an emoji profile.
 
-Space Pulse replaces the standard new tab with a space-themed dashboard based on NASA's Astronomy Picture of the Day (APOD) API. Every day you get a new astronomy picture while also being able to access all the tools you need most—search, links, notes, and your personalized greeting.
+## Motivation
 
-This project was created out of desire for a nice-looking yet functional start page. In other words, I decided to replace my blank new tab with something that would inspire interest in space while staying useful.
+I wanted to build this new tab page because I wanted something that was more engaging for a new tab but didn't sacrifice the beauty of a default new tab
 
----
-## Preveiw
-![preview image of space pulse](image.png)
+## Preview
+![3rd day](image-3.png) ![2nd day](image-1.png) ![1st day](image-2.png)
 
-## ✨ Features
+## Features
 
-### 🌌 Daily NASA APOD Background
+- NASA APOD
 
-Space Pulse fetches NASA's Astronomy Picture of the Day each day via the APOD API.
+- Search bar
 
-* Automatically displays the latest astronomy image.
-* Both images and videos are supported.
-* If NASA decides to post a video rather than an image, the app uses a fallback space background.
+- Quick links
 
-### 👋 Personalized Welcome
+- Sticky notes
 
-During your first visit, you will be prompted to type your name and select your own emoji avatar.
+- Current time/date and greeting
 
-Your profile is stored in your local browser and consists of:
+- Emoji profile
 
-* Your name.
-* Emoji avatar.
-* Personalized greeting according to the time of the day.
+### Search Engines
 
-### 🕒 Live Clock & Date
+The search bar can be changed to any search engine by changing the search engine in `main.js`. The default search bar is set to Google but can be changed to other search engines as well. The following are the search engine links below:
 
-Time and date are shown on the dashboard and updated automatically without a need for reloading the page.
+| Search Engine | Link |
 
-### 🔍 Search
+| Google | `https://www.google.com/search?q=` |
 
-Use the search bar in order to search the web through Google without leaving your new tab page.
+| DuckDuckGo | `https://duckduckgo.com/?q=` |
 
-### 🔗 Quick Links
+| Bing | `https://www.bing.com/search?q=` |
 
-Store shortcuts to your favorite websites.
+| Yahoo | `https://search.yahoo.com/search?p=` |
 
-Here is what you can do with them:
+| Brave Search | `https://search.brave.com/search?q=` |
 
-* Add new links.
-* Edit the existing ones.
-* Delete links anytime you want.
+### NASA APOD (Astronomy Picture of the Day)
 
-Everything is stored locally in your browser.
+The current APOD from NASA is the background for this tab. The APOD can either be an image or a video. If the APOD is a video then a default picture is used for the tab's page.
 
-### 📝 Sticky Notes
+### Search
 
-Store small reminders right on your new tab page.
+The search bar can search any search engine without having to open up another tab.
 
-With your notes you can:
+### Quick Links
 
-* Create notes.
-* Edit notes.
-* Mark the notes as completed.
-* Delete notes.
+The quick links allow the user to type in any links they frequently visit.
 
-The notes are available even after closing the browser.
+### Sticky Notes
 
-### 💾 Local Storage
+The sticky notes allow the user to make, check off, edit, and delete notes.
 
-An account and a database aren't required.
+### Emoji Profile
 
-The following data is stored locally in your browser:
+When first opening up the tab the user gets to choose what emoji they want and it saves the emoji in the browser.
 
-* Profile data.
-* Emoji avatar.
-* Quick links.
-* Sticky notes.
+## Technologies Used
 
-Nothing is uploaded to the servers.
+- HTML
 
----
+- CSS
 
-## 🛠️ Built With
+- JavaScript
 
-* HTML5.
-* CSS3.
-* JavaScript (ES6).
-* Vite.
-* NASA Astronomy Picture of the Day (APOD) API.
-* Browser Local Storage.
+- Vite
 
----
+- NASA APOD API
 
-## 📂 Project Structure
+- localStorage
+
+## How To Run
+
+To run the project you need to do the following:
+
+1. Clone the repo
+
+2. Install the dependencies
+
+3. Create a `.env` file in the project root
+
+4. Add your NASA API key to the file
+
+5. Run the dev server
+
+An example of the steps 2-4 would be:
 
 ```
-src/
-│── main.js
-│── style.css
-│
-index.html
-vite.config.js
-package.json
-.env
-```
 
----
-
-## 🚀 Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/your-username/space-pulse.git
-
-cd space-pulse
-```
-
-### 2. Install dependencies
-
-```bash
 npm install
-```
 
-### 3. Get a NASA API Key
-
-Obtain a free API key from:
-
-https://api.nasa.gov
-
-### 4. Create a `.env` file
-
-```env
-VITE_NASA_API_KEY=your_api_key_here
-```
-
-### 5. Start the development server
-
-```bash
 npm run dev
+
 ```
 
-### 6. Build for production
+For the `.env` file:
 
-```bash
-npm run build
 ```
 
----
+VITE_NASA_API_KEY=your_api_key_here
 
-## 📦 How It Works
+```
 
-1. The app makes a request to get the latest APOD data from NASA.
-2. The image (or fallback background) is being displayed.
-3. Profile data, notes, and shortcuts are being loaded from Local Storage.
-4. The clock updates in real-time.
-5. Anything that has been changed is automatically being stored in your browser.
+For the repo structure there is:
 
----
+```
 
-## 💡 What I Learned
+src/
 
-Building this app allowed me to learn how to:
+main.js
 
-* Work with REST API.
-* Fetch and display external data.
-* Handle API responses and errors.
-* Use Local Storage to store user data.
-* Create a responsive interface.
-* Organize JavaScript project with Vite.
-* Improve user experience with simple animations.
+style.css
 
----
+index.html
 
-## 🔮 Future Improvements
+```
 
-Some features I would like to add in the future are:
+## What I Learned
 
-* ⏳ Pomodoro timer.
-* 🌤️ Weather widget.
-* 🌙 Dark and Light themes.
-* 🎨 Multiple sticky note colors.
-* ⭐ Drag-and-drop quick links.
-* 📅 Calendar widget.
-* 📊 Daily productivity tracker.
-* 🔎 Multiple search engines.
+- API usage
 
----
+- Local storage
 
-## 🤖 AI Usage
+- How to make a new tab page
 
-During the development process, AI was used as an assistant for:
+## What I Want To Add In The Future
 
-* Brainstorming feature ideas.
-* Improving UI/UX design decisions.
-* Debugging JavaScript issues.
-* Refactoring and organizing code.
-* Writing and improving documentation.
+- A Pomodoro timer
 
-All project architecture, implementation, testing, customization, and final decisions have been completed and reviewed by me.
+- More options for sticky notes
 
----
+- Weather
 
-## 🙏 Credits
+- Themes
 
-* NASA for providing the Astronomy Picture of the Day (APOD) API.
-* Hack Club Stardance for inspiring and encouraging the project.
-* Everyone who has tested the project and shared their feedback.
+- More options for quick links
 
----
+## Credits
 
-## 📄 License
+- NASA for the APOD API
 
-This project is licensed under the MIT License.
+- Hack Club Stardance for the challenge
 
-Feel free to use, modify, and learn from it.
+- My friends for testing out the new tab
+
+
+
+## License
+
+This new tab page is open-sourced under the MIT License. Check the `LICENSE` file for more info
